@@ -1,26 +1,26 @@
 package com.rpoladia.thread.executorframework;
 
-public class ManualThreadManagement {
-    public static void main(String[] args) {
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+public class ExecutorsFixedThreadManagement {
+    public static void main(String[] args) throws InterruptedException {
         long start = System.currentTimeMillis();
-        Thread[] threads = new Thread[9];
+        ExecutorService executor = Executors.newFixedThreadPool(9);
+
         for(int i=1; i<10; i++) {
-            //System.out.println(factorial(i));
-            int finalI = i; //This is required as the lambda requires final values.
-            threads[i-1] = new Thread(() -> {
+            int finalI = i;
+
+            Future<?> future = executor.submit(() -> {
                 long result = factorial(finalI);
                 System.out.println(result);
             });
-            threads[i-1].start();
         }
 
-        for(int i=1; i<10; i++) {
-            try {
-                threads[i-1].join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        executor.shutdown();
+        executor.awaitTermination(2, TimeUnit.SECONDS);
 
         System.out.println("Total time: " + (System.currentTimeMillis() - start));
     }

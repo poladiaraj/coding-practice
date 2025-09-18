@@ -3,24 +3,24 @@ package com.rpoladia.thread.lock.fairness;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class UnfairLockExample {
-    private final Lock unfairLock = new ReentrantLock();
+public class FairLockExample {
+    private final Lock fairLock = new ReentrantLock(true);
 
     public void accessResource() {
-        unfairLock.lock();
+        fairLock.lock();
         try {
             System.out.println(Thread.currentThread().getName() + " acquired the lock.");
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } finally {
-            unfairLock.unlock();
+            fairLock.unlock();
             System.out.println(Thread.currentThread().getName() + " released the lock.");
         }
     }
 
-    public static void main(String[] args) {
-        UnfairLockExample example = new UnfairLockExample();
+    public static void main(String[] args) throws InterruptedException {
+        FairLockExample example = new FairLockExample();
 
         Runnable task = new Runnable() {
             @Override
@@ -34,7 +34,9 @@ public class UnfairLockExample {
         Thread t3 = new Thread(task);
 
         t1.start();
+        //Thread.sleep(50);
         t2.start();
+        //Thread.sleep(50);
         t3.start();
     }
 }

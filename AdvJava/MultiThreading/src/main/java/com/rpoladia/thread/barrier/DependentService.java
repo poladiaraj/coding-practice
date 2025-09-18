@@ -1,7 +1,6 @@
 package com.rpoladia.thread.barrier;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 
 public class DependentService implements Callable<String> {
@@ -13,12 +12,11 @@ public class DependentService implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        try {
-            Thread.sleep(2000);
-            System.out.println(Thread.currentThread().getName() + " service started.");
-        } finally {
+        System.out.println(Thread.currentThread().getName() + " service started.");
+        Thread.sleep(2000);
+        System.out.println(Thread.currentThread().getName() + " is waiting at the barrier.");
+        cyclicBarrier.await();
 
-        }
         return "ok";
     }
 }
